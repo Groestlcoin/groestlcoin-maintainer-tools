@@ -14,7 +14,7 @@ generated from a previous release.
 
 Example usage:
 
-    ../maintainer-tools/list-pulls.py v0.18.0 0.19 relnot/pulls-exclude.json > relnot/pulls.md
+    ../maintainer-tools/list-pulls.py v2.18.2 2.19.1 relnot/pulls-exclude.json > relnot/pulls.md
 
 The output of this script is a first draft based on rough heuristics, and
 likely needs to be extensively manually edited before ending up in the release
@@ -33,7 +33,7 @@ GIT = os.getenv('GIT', 'git')
 GHMETA = os.getenv('GHMETA', '../bitcoin-gh-meta')
 
 # == Label to category mapping ==
-# See: https://github.com/bitcoin/bitcoin/labels
+# See: https://github.com/groestlcoin/groestlcoin/labels
 # this is priority ordering: the first label to be matched determines the
 # category it is slotted to
 # TODO: simply create titles for combinations of mappings, and leave it up to release note writer
@@ -82,12 +82,12 @@ LABEL_MAPPING = (
 UNCATEGORIZED = 'Uncategorized'
 
 # == PR title prefix to category mapping ==
-# this takes precedence over the above label mapping 
+# this takes precedence over the above label mapping
 # handle (in all cases, ignoring including leading and trailing ' ')
 # SPECIFY IN LOWERCASE
 # set do_strip as False if the prefix adds information beyond what the category provides!
 # '[prefix]:' '[prefix]' 'prefix:'
-PREFIXES = [ 
+PREFIXES = [
     # (prefix, category, do_strip)
     ('bench', 'Tests and QA', False),
     ('build', 'Build system', True),
@@ -137,7 +137,7 @@ def remove_last_if_empty(l):
     else:
         return l
 
-ref_from = sys.argv[1] # 'v0.10.0rc1'
+ref_from = sys.argv[1] # 'v2.1.0.6'
 ref_to = sys.argv[2] # 'master'
 
 # read exclude file
@@ -329,9 +329,9 @@ for pull in pulls_order:
     data1['title'] = message
 
     per_category[category].append((pull, message, author))
-    pull_labels[pull] = labels 
+    pull_labels[pull] = labels
     pull_meta[pull] = data1
-    
+
 for _,category in LABEL_MAPPING:
     if not per_category[category]:
         continue
@@ -374,4 +374,3 @@ data_out = {
 with open('pulls.json','w') as f:
     json.dump(data_out, f, sort_keys=True,
                            indent=4, separators=(',', ': '))
-

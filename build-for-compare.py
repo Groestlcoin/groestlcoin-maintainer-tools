@@ -2,7 +2,7 @@
 # Written by W.J. van der Laan, provided under MIT license.
 #
 # Usage: ../do_build.py <hash> [<hash> ...]
-# Will produce a ../bitcoind.$1.stripped for binary comparison
+# Will produce a ../groestlcoind.$1.stripped for binary comparison
 import os,subprocess,sys,argparse,logging,shutil,re,hashlib,shlex,tempfile
 from collections import defaultdict
 from typing import List
@@ -64,7 +64,7 @@ CPPFLAGS=[]
 OBJCOPY_ARGS=['-R.note.gnu.build-id','-g','-S']
 OBJDUMP_ARGS=['-C','--no-show-raw-insn','-d','-r']
 
-# Set QT_RCC_SOURCE_DATE_OVERRIDE so that bitcoin-qt is deterministic
+# Set QT_RCC_SOURCE_DATE_OVERRIDE so that groestlcoin-qt is deterministic
 os.environ['QT_RCC_SOURCE_DATE_OVERRIDE'] = '1'
 
 # These can be overridden from the environment
@@ -207,7 +207,7 @@ def objdump_all(srcdir: str, tgtdir: str):
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Build to compare binaries. Execute this from a repository directory.')
     parser.add_argument('commitids', metavar='COMMITID', nargs='+')
-    parser.add_argument('--executables', default='src/bitcoind', help='Comma-separated list of executables to build, default is "src/bitcoind"')
+    parser.add_argument('--executables', default='src/groestlcoind', help='Comma-separated list of executables to build, default is "src/groestlcoind"')
     parser.add_argument('--tgtdir', default=DEFAULT_TGTDIR, help='Target directory, default is "{}"'.format(DEFAULT_TGTDIR))
     parser.add_argument('--repodir', default=DEFAULT_REPODIR, help='Temp repository directory, default is "{}"'.format(DEFAULT_REPODIR))
     parser.add_argument('--parallelism', '-j', default=DEFAULT_PARALLELISM, type=int, help='Make parallelism, default is {}'.format(DEFAULT_PARALLELISM))
@@ -312,7 +312,7 @@ def main():
             opt = shell_join(args.opt)
             check_call(['./configure', '--disable-hardening', '--without-cli', '--disable-tests', '--disable-bench', '--disable-ccache',
                 '--prefix={}'.format(args.prefix) if args.prefix else '--with-incompatible-bdb',
-                'CPPFLAGS='+(' '.join(cppflags)), 
+                'CPPFLAGS='+(' '.join(cppflags)),
                 'CFLAGS='+opt, 'CXXFLAGS='+opt, 'LDFLAGS='+opt] + CONFIGURE_EXTRA)
 
             for name in args.executables:
@@ -328,7 +328,7 @@ def main():
             logger.info('Performing basic analysis pass...')
             objdump_all(commitdir_obj, commitdir)
 
-        if len(args.commitids)>1: 
+        if len(args.commitids)>1:
             logger.info('Use these commands to compare results:')
             logger.info('$ sha256sum {}/*.stripped'.format(args.tgtdir))
             logger.info('$ git diff -W --word-diff {} {}'.format(os.path.join(args.tgtdir,args.commitids[0]), os.path.join(args.tgtdir,args.commitids[1])))
@@ -337,4 +337,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

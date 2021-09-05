@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 '''
-Simple script to check the status of all Bitcoin Core DNS seeds.
-Seeds are available from https://github.com/bitcoin/bitcoin/blob/master/src/chainparams.cpp
+Simple script to check the status of all Groestlcoin Core DNS seeds.
+Seeds are available from https://github.com/groestlcoin/groestlcoin/blob/master/src/groestlcoin.cpp
 '''
 import subprocess
 
-SEEDS_MAINNET=["seed.bitcoin.sipa.be","dnsseed.bluematt.me","dnsseed.bitcoin.dashjr.org",
-        "seed.bitcoinstats.com","seed.bitcoin.jonasschnelli.ch","seed.btc.petertodd.org",
-        "seed.bitcoin.sprovoost.nl", "dnsseed.emzy.de","seed.bitcoin.wiz.biz"]
-SEEDS_TESTNET=["testnet-seed.bitcoin.jonasschnelli.ch","seed.tbtc.petertodd.org",
-        "testnet-seed.bluematt.me","seed.testnet.bitcoin.sprovoost.nl"]
+SEEDS_MAINNET=["dnsseed1.groestlcoin.org","dnsseed2.groestlcoin.org","dnsseed3.groestlcoin.org",
+        "dnsseed4.groestlcoin.org"]
+SEEDS_TESTNET=["testnet-seed1.groestlcoin.org","testnet-seed2.groestlcoin.org"]
 
 def check_seed(x):
     p = subprocess.run(["host",x], capture_output=True, universal_newlines=True)

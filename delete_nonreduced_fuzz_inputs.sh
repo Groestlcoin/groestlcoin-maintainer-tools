@@ -13,7 +13,7 @@ export FUZZ_INPUTS_DIR="fuzz_seed_corpus"
 
 set -e
 
-echo "Installing Bitcoin Core build deps"
+echo "Installing Groestlcoin Core build deps"
 export DEBIAN_FRONTEND=noninteractive
 apt update
 apt install -y \
@@ -31,9 +31,9 @@ git clone https://github.com/bitcoin-core/qa-assets.git
   git commit -a -m "Delete fuzz inputs"
 )
 
-git clone https://github.com/bitcoin/bitcoin.git
+git clone https://github.com/groestlcoin/groestlcoin.git
 (
-  cd bitcoin
+  cd groestlcoin
 
   ./autogen.sh
 

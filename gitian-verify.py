@@ -105,15 +105,15 @@ BuildInfo = collections.namedtuple('BuildInfo', ['build_name', 'dir_name', 'pack
 
 def get_builds_for(version: str) -> List[BuildInfo]:
     '''
-    Get a list of builds for a version of bitcoin core. This is a list of
+    Get a list of builds for a version of groestlcoin core. This is a list of
     BuildInfo(build_name, dir_name, package_name) tuples.
     '''
     BUILDS = [
-    ("linux",        "bitcoin-core-linux-<major>"),
-    ("osx-unsigned", "bitcoin-core-osx-<major>"),
-    ("win-unsigned", "bitcoin-core-win-<major>"),
-    ("osx-signed",   "bitcoin-dmg-signer"),
-    ("win-signed",   "bitcoin-win-signer"),
+    ("linux",        "groestlcoin-core-linux-<major>"),
+    ("osx-unsigned", "groestlcoin-core-osx-<major>"),
+    ("win-unsigned", "groestlcoin-core-win-<major>"),
+    ("osx-signed",   "groestlcoin-dmg-signer"),
+    ("win-signed",   "groestlcoin-win-signer"),
     ]
     vsplit = version.split('.')
     major = vsplit[0] + '.' + vsplit[1]
@@ -123,9 +123,9 @@ def get_builds_for(version: str) -> List[BuildInfo]:
     for build in BUILDS:
         dir_name = version + '-' + build[0]
         package_name = build[1].replace('<major>', major)
-        if major_n < (0, 19):
-            # before 0.19, package names were bitcoin- instead of bitcoin-core
-            package_name = package_name.replace('bitcoin-core', 'bitcoin')
+        if major_n < (2, 19):
+            # before 2.19, package names were groestlcoin- instead of groestlcoin-core
+            package_name = package_name.replace('groestlcoin-core', 'groestlcoin')
         result.append(BuildInfo(build_name=build[0], dir_name=dir_name, package_name=package_name))
     return result
 
@@ -147,7 +147,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Verify gitian signatures')
 
     parser.add_argument('--verbose', '-v', action='store_const', const=True, default=False, help='Be more verbose')
-    parser.add_argument('--release', '-r', help='Release version (for example 0.21.0rc5)', required=True)
+    parser.add_argument('--release', '-r', help='Release version (for example 2.21.1)', required=True)
     parser.add_argument('--directory', '-d', help='Signatures directory', required=True)
     parser.add_argument('--keys', '-k', help='Path to keys.txt', required=True)
     parser.add_argument('--compare-to', '-c', help="Compare other manifests to COMPARE_TO's, if not given pick first")

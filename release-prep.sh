@@ -1,16 +1,16 @@
 #!/bin/bash
 
-# This script will do code related release preparation stuff for Bitcoin Core as specified in
+# This script will do code related release preparation stuff for Groestlcoin Core as specified in
 # the release-process.md file.
 # This should be run from the folder containing the Source tree
 # The following actions will be done:
 #  1. Set the version numbers as specified in the arguments
-#  2. Update src/chainparams.cpp nMinimumChainWork and defaultAssumeValid with information from the getblockchaininfo rpc.
+#  2. Update src/groestlcoin.cpp nMinimumChainWork and defaultAssumeValid with information from the getblockchaininfo rpc.
 #  3. Update Hard coded seeds
 #  4. Set BLOCK_CHAIN_SIZE
 #  5. Update translations
 #  6. Generate updated manpages
-# Note: Step 2 assumes that an up-to-date Bitcoin Core is running and has been built in the
+# Note: Step 2 assumes that an up-to-date Groestlcoin Core is running and has been built in the
 # directory which this script is being run.
 
 # Variables
@@ -28,18 +28,18 @@ genManpages=true
 read -d '' usage <<- EOF
 Usage: $scriptName version block_chain_size
 
-Run this script from the Bitcoin Core Source root directory. This requires a current version of Bitcoin Core
+Run this script from the Groestlcoin Core Source root directory. This requires a current version of Groestlcoin Core
 to be running at the time that this script is run.
 
 Arguments:
 version		    Version number to set following the MAJOR.MINOR.REVISION format. Only required if
-                    a version bump will be done. e.g. 0.14.0
-block_chain_size    The size of the blockchain for the intro display. Should contain a little bit of 
+                    a version bump will be done. e.g. 2.13.3
+block_chain_size    The size of the blockchain for the intro display. Should contain a little bit of
                     overhead. Only required if BLOCK_CHAIN_SIZE will be updated. e.g. 120
 
 Options:
---datadir <path>    The path to the data directory of the running Bitcoin Core node. Note that this is 
-                    different from Bitcoin Core's -datadir option syntax. There is no equals, simply a space
+--datadir <path>    The path to the data directory of the running Groestlcoin Core node. Note that this is
+                    different from Groestlcoin Core's -datadir option syntax. There is no equals, simply a space
                     followed by the path
 
 --skip [v|c|s|b|t|m]   Skip the specified steps. v=version bump; c=update nMinimumChainwork and defaultAssumeValid
@@ -139,24 +139,24 @@ then
 
     # docs
     sed -i "/PROJECT_NUMBER         = /c\PROJECT_NUMBER         = $VERSION" ./doc/Doxyfile
-    sed -i "1s/.*/Bitcoin Core $VERSION/" ./doc/README.md
-    sed -i "1s/.*/Bitcoin Core $VERSION/" ./doc/README_windows.txt
+    sed -i "1s/.*/Groestlcoin Core $VERSION/" ./doc/README.md
+    sed -i "1s/.*/Groestlcoin Core $VERSION/" ./doc/README_windows.txt
 
     # gitian descriptors
-    sed -i "2s/.*/name: \"bitcoin-win-$major.$minor\"/" ./contrib/gitian-descriptors/gitian-win.yml
-    sed -i "2s/.*/name: \"bitcoin-linux-$major.$minor\"/" ./contrib/gitian-descriptors/gitian-linux.yml
-    sed -i "2s/.*/name: \"bitcoin-osx-$major.$minor\"/" ./contrib/gitian-descriptors/gitian-osx.yml
+    sed -i "2s/.*/name: \"groestlcoin-win-$major.$minor\"/" ./contrib/gitian-descriptors/gitian-win.yml
+    sed -i "2s/.*/name: \"groestlcoin-linux-$major.$minor\"/" ./contrib/gitian-descriptors/gitian-linux.yml
+    sed -i "2s/.*/name: \"groestlcoin-osx-$major.$minor\"/" ./contrib/gitian-descriptors/gitian-osx.yml
 fi
 
 if [[ $chainparamsUpdate = true ]]
 then
     # Update nMinimumChainWork and defaultAssumeValid
     echo "Updating nMinimumChainWork and defaultAssumeValid"
-    blockchaininfo=`src/bitcoin-cli ${DATADIR} getblockchaininfo`
+    blockchaininfo=`src/groestlcoin-cli ${DATADIR} getblockchaininfo`
     chainwork=`echo "$blockchaininfo" | jq -r '.chainwork'`
     bestblockhash=`echo "$blockchaininfo" | jq -r '.bestblockhash'`
-    sed -i "0,/        consensus.nMinimumChainWork = uint256S(.*/s//        consensus.nMinimumChainWork = uint256S(\"0x$chainwork\");/" ./src/chainparams.cpp
-    sed -i "0,/        consensus.defaultAssumeValid = uint256S(.*/s//        consensus.defaultAssumeValid = uint256S(\"0x$bestblockhash\");/" ./src/chainparams.cpp
+    sed -i "0,/        consensus.nMinimumChainWork = uint256S(.*/s//        consensus.nMinimumChainWork = uint256S(\"0x$chainwork\");/" ./src/groestlcoin.cpp
+    sed -i "0,/        consensus.defaultAssumeValid = uint256S(.*/s//        consensus.defaultAssumeValid = uint256S(\"0x$bestblockhash\");/" ./src/groestlcoin.cpp
 fi
 
 if [[ $seedUpdate = true ]]
@@ -164,7 +164,7 @@ then
     # Update Seeds
     echo "Updating hard coded seeds"
     pushd ./contrib/seeds
-    curl -s http://bitcoin.sipa.be/seeds.txt > seeds_main.txt
+    curl -s http://seeds.groestlcoin.org/seeds.txt > seeds_main.txt
     python makeseeds.py < seeds_main.txt > nodes_main.txt
     python generate-seeds.py . > ../../src/chainparamsseeds.h
 popd

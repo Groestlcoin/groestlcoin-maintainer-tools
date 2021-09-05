@@ -1,4 +1,4 @@
-External repository for Bitcoin Core related maintenance tools.
+External repository for Groestlcoin Core related maintenance tools.
 
 github-merge
 ------------
@@ -36,9 +36,9 @@ couldn't mess with the sources.
 
 ### Setup
 
-Configuring the github-merge tool for the bitcoin repository is done in the following way:
+Configuring the github-merge tool for the groestlcoin repository is done in the following way:
 
-    git config githubmerge.repository bitcoin/bitcoin
+    git config githubmerge.repository groestlcoin/groestlcoin
     git config githubmerge.pushmirrors "git@github.com:bitcoin-core/gui.git,git@github.com:YourPrivateMirror/bitcoin-core.git"
     git config githubmerge.testcmd "make -j4 check" (adapt to whatever you want to use for testing)
     git config --global user.signingkey mykeyid
@@ -85,7 +85,7 @@ It will do the following automatically:
 clang-format
 ------------
 
-A script to format cpp source code according to the .clang-format file in the bitcoin repo.
+A script to format cpp source code according to the .clang-format file in the groestlcoin repo.
 This should only be applied to new files or files which are currently not actively developed on.
 Also, git subtrees are not subject to formatting.
 
@@ -99,7 +99,7 @@ Build for binary comparison.
 
 See `build-for-compare.py --help` for more information.
 
-Builds from current directory, which is assumed to be a git clone of the bitcoin repository.
+Builds from current directory, which is assumed to be a git clone of the groestlcoin repository.
 
 **DO NOT RUN this with the nocopy=1 flag set on working tree if you have any local additions, it will nuke all
 non-repository files, multiple times over. By leaving nocopy off (default) the git tree is copied to a temporary
@@ -107,10 +107,10 @@ directory and all operations are performed there.**
 
 Example:
 ```bash
-git clone https://github.com/bitcoin/bitcoin.git bitcoin-compare
-cd bitcoin-compare
-../bitcoin-maintainer-tools/build-for-compare.py 4731cab 2f71490
-sha256sum /tmp/compare/bitcoind.*.stripped
+git clone https://github.com/groestlcoin/groestlcoin.git groestlcoin-compare
+cd groestlcoin-compare
+../groestlcoin-maintainer-tools/build-for-compare.py 4731cab 2f71490
+sha256sum /tmp/compare/groestlcoind.*.stripped
 git diff -W --word-diff /tmp/compare/4731cab /tmp/compare/2f71490
 ```
 
@@ -122,7 +122,7 @@ Pull ids are listed in `to_backport.txt` or given on the command line, and they 
 with the repository name, e.g.:
 
 ```bash
-../bitcoin-maintainer-tools/backport.py bitcoin/bitcoin#21907 bitcoin-core/gui#277 bitcoin-core/gui#365
+../groestlcoin-maintainer-tools/backport.py groestlcoin/groestlcoin#21907 bitcoin-core/gui#277 bitcoin-core/gui#365
 
 ```
 
@@ -135,12 +135,12 @@ unittest-statistics
 
 Usage:
 ```bash
-unittest-statistics.py </path/to/test_bitcoin> [<subtest>]
+unittest-statistics.py </path/to/test_groestlcoin> [<subtest>]
 ```
 
 For example:
 ```bash
-unittest-statistics.py src/test/test_bitcoin wallet_tests
+unittest-statistics.py src/test/test_groestlcoin wallet_tests
 ```
 
 treehash512
@@ -182,7 +182,7 @@ signed. If so it just displays the signature, if not, it is signed.
 subtree updates
 ---------------
 
-Bitcoin Core comes with several subtrees (c.f. https://github.com/bitcoin/bitcoin/tree/master/test/lint#git-subtree-checksh)
+Groestlcoin Core comes with several subtrees (c.f. https://github.com/groestlcoin/groestlcoin/tree/master/test/lint#git-subtree-checksh)
 To update the subtree, make sure to fetch the remote of the subtree.
 Then a simple call should pull in and squash the changes:
 
@@ -195,7 +195,7 @@ For setting up a subtree, refer to `git help subtree`.
 check-dnsseeds
 ---------------
 
-Sanity-check the DNS seeds used by Bitcoin Core.
+Sanity-check the DNS seeds used by Groestlcoin Core.
 
 Usage:
 
@@ -207,19 +207,16 @@ Example output:
 
 ```bash
 * Mainnet
-OK   seed.bitcoin.sipa.be (40 results)
-OK   dnsseed.bluematt.me (33 results)
-FAIL dnsseed.bitcoin.dashjr.org
-OK   seed.bitcoinstats.com (50 results)
-OK   seed.bitcoin.jonasschnelli.ch (38 results)
-OK   seed.btc.petertodd.org (23 results)
-OK   seed.bitcoin.sprovoost.nl (35 results)
-OK   dnsseed.emzy.de (41 results)
+OK   dnsseed1.groestlcoin.org (40 results)
+OK   dnsseed2.groestlcoin.org (33 results)
+OK   dnsseed3.groestlcoin.org (40 results)
+OK   dnsseed4.groestlcoin.org (38 results)
+
 
 * Testnet
-OK   testnet-seed.bitcoin.jonasschnelli.ch (36 results)
-OK   seed.tbtc.petertodd.org (38 results)
-OK   testnet-seed.bluematt.me (5 results)
+OK   testnet-seed1.groestlcoin.org (12 results)
+OK   testnet-seed2.groestlcoin.org (11 results)
+
 ```
 
 delete non-reduced fuzz inputs
@@ -230,10 +227,10 @@ Refer to the documentation inside the script.
 fastcopy-chaindata
 -------------------
 
-Fast local copy of Bitcoin Core blockchain state.
+Fast local copy of Groestlcoin Core blockchain state.
 
 ```bash
-fastcopy-chaindata.py ~/.bitcoin /path/to/temp/datadir
+fastcopy-chaindata.py ~/.groestlcoin /path/to/temp/datadir
 ```
 
 This utility hardlinks all but the last block data file (rev and blk),
@@ -263,7 +260,7 @@ generated from a previous release.
 
 Example usage:
 
-    ../maintainer-tools/list-pulls.py v0.18.0 0.19 relnot/pulls-exclude.json > relnot/pulls.md
+    ../maintainer-tools/list-pulls.py v2.18.2 2.19.1 relnot/pulls-exclude.json > relnot/pulls.md
 
 The output of this script is a first draft based on rough heuristics, and
 likely needs to be extensively manually edited before ending up in the release
@@ -294,21 +291,21 @@ pip3 install --user pyyaml gpg
 The `gpg` module requires the [gpgme](https://www.gnupg.org/software/gpgme/index.html) library
 which is usually present on Linux, and can be installed with `brew install gpgme` on macOS.
 
-Example usage: `./gitian-verify.py -r 0.21.0rc5 -d ../gitian.sigs -k ../bitcoin/contrib/builder-keys/keys.txt`
+Example usage: `./gitian-verify.py -r 2.21.01 -d ../gitian.sigs -k ../groestlcoin/contrib/builder-keys/keys.txt`
 
 Where
 
-- `-r 0.21.0rc5` specifies the release to verify signatures for.
-- `-d ../gitian.sigs` specifies the directory where the repository with signatures, [gitian.sigs](https://github.com/bitcoin-core/gitian.sigs/) is checked out.
-- `../bitcoin/contrib/builder-keys/keys.txt` is the path to `keys.txt` file inside the main repository that specifies the valid keys and what signers they belong to.
+- `-r 2.21.1` specifies the release to verify signatures for.
+- `-d ../gitian.sigs` specifies the directory where the repository with signatures, [gitian.sigs](https://github.com/groestlcoin/gitian.sigs/) is checked out.
+- `../groestlcoin/contrib/builder-keys/keys.txt` is the path to `keys.txt` file inside the main repository that specifies the valid keys and what signers they belong to.
 
 Example output:
 ```
 Signer            linux      osx-unsigned  win-unsigned   osx-signed    win-signed
-justinmoon        No Key        No Key        No Key        No Key        No Key
-laanwj              OK            OK            OK            OK            OK
-luke-jr             OK            OK            OK            OK            OK
-marco               -             OK            OK            OK            OK
+gruve-p           No Key        No Key        No Key        No Key        No Key
+jackielove4u        OK            OK            OK            -             -
+hashengineering     OK            OK            OK            -             -
+mmitech             OK            OK            OK            -             -
 
 Missing keys
 norisg         3A51FF4D536C5B19BE8800A0F2FC9F9465A2995A  from GPG, from keys.txt
@@ -350,10 +347,10 @@ Then, edit the configuration file. Only thing that is necessary to change is `gh
 
 Depending on your browser preference you might want to change `browser`, this is the command that will be invoked when clicking on an issue number. It defaults to `null` which indicates to use the system web browser.
 
-If you want to see PR status (and other issue details like labels), point `meta` for the `bitcoin/bitcoin` repository to an up-to-date checkout of [bitcoin-gh-meta](https://github.com/zw/bitcoin-gh-meta).
+If you want to see PR status (and other issue details like labels), point `meta` for the `groestlcoin/groestlcoin` repository to an up-to-date checkout of [bitcoin-gh-meta](https://github.com/zw/bitcoin-gh-meta).
 ```
     "meta": {
-        "bitcoin/bitcoin": "/path/to/bitcoin-gh-meta"
+        "groestlcoin/groestlcoin": "/path/to/bitcoin-gh-meta"
     },
 ```
 

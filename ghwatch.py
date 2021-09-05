@@ -238,19 +238,19 @@ def draw(notifications):
         #   state_change is only for self-initiated state changed, not any monitored issue/PR
         if rec.subject.type in {'PullRequest', 'Issue'}:
             # PullRequest: https://api.github.com/repos/bitcoin-core/secp256k1/pulls/875
-            # Issue: https://api.github.com/repos/bitcoin/bitcoin/issues/20935
+            # Issue: https://api.github.com/repos/groestlcoin/groestlcoin/issues/20935
             m = re.match('.*\/([0-9]+)$', rec.subject.url)
             issue = int(m.group(1))
             meta = ghmeta.get((rec.repository.full_name, issue))
             ref_str = str(issue)
         elif rec.subject.type == 'Commit':
-            # Commit: https://api.github.com/repos/bitcoin/bitcoin/commits/54ce4fac80689621dcbcc76169b2b00b179ee743
+            # Commit: https://api.github.com/repos/groestlcoin/groestlcoin/commits/54ce4fac80689621dcbcc76169b2b00b179ee743
             m = re.match('.*\/([0-9a-f]+)$', rec.subject.url)
             ref_str = m.group(1)
             issue = None
             meta = None
         else:
-            # Release: https://api.github.com/repos/bitcoin-core/HWI/releases/34442950
+            # Release: https://api.github.com/repos/Groestlcoin/HWI/releases/34442950
             # RepositoryInvitation: ?
             if rec.subject.type not in {'Release', 'RepositoryInvitation'}: # Huh
                 print(rec.subject.type, rec.subject.url)

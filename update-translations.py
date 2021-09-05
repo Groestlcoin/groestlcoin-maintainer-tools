@@ -32,8 +32,8 @@ SOURCE_LANG = 'bitcoin_en'
 LOCALE_DIR = 'src/qt/locale'
 # Minimum number of non-numerus messages for translation to be considered at all
 MIN_NUM_NONNUMERUS_MESSAGES = 10
-# Regexp to check for Bitcoin addresses
-ADDRESS_REGEXP = re.compile('([13]|bc1)[a-zA-Z0-9]{30,}')
+# Regexp to check for Groestlcoin addresses
+ADDRESS_REGEXP = re.compile('([F3]|grs1)[a-zA-Z0-9]{32,}')
 # Path to git
 GIT = os.getenv("GIT", "git")
 # Original content file suffix
@@ -288,4 +288,3 @@ if __name__ == '__main__':
     postprocess_translations(xliff_compatible_mode)
     update_git()
     update_build_systems()
-
